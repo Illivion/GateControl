@@ -1,4 +1,5 @@
-﻿using GateControl.Web.Services;
+﻿using System;
+using GateControl.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
