@@ -33,16 +33,20 @@ namespace GateControl.Web.Services
             _currentClient?.SendString("ping");
         }
 
-        public void SendPushCommand()
+        public Boolean SendPushCommand()
         {
+            var client = _currentClient;
+
             try
             {
-                _currentClient?.SendString("push");
+                client?.SendString("push");
             }
             catch
             {
-                _currentClient?.Close();
+                client?.Close();
             }
+
+            return client != null;
         }
 
         public void Start()

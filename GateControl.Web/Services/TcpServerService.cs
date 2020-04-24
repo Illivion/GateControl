@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,9 +26,9 @@ namespace GateControl.Web.Services
             _server.Stop();
         }
 
-        public void Push()
+        public Boolean Push()
         {
-            _server.SendPushCommand();
+            return _server.SendPushCommand();
         }
     }
 }

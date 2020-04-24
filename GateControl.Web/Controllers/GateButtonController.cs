@@ -21,11 +21,11 @@ namespace GateControl.Web.Controllers
         [Route("gate/push")]
         public IActionResult Push()
         {
-            _tcpServer.Push();
+            var sentToDevice = _tcpServer.Push();
 
             var dt = DateTime.Now;
 
-            return Ok($"Accepted on {dt:dd.MM.yy HH:mm:ss}");
+            return Ok($"Accepted on {dt:dd.MM.yy HH:mm:ss}. Sent: {sentToDevice}");
         }
 
         [HttpPost]
