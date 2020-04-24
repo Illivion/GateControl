@@ -18,9 +18,20 @@ namespace GateControl.Web.Controllers
 
         [HttpGet]
         [Route("gate/push")]
-        public void Push()
+        public IActionResult Push()
         {
-           _tcpServer.Push();
+            _tcpServer.Push();
+
+            var dt = DateTime.Now;
+
+            return Ok($"Accepted on {dt:dd.MM.yy HH:mm:ss}");
+        }
+
+        [HttpPost]
+        [Route("gate/push")]
+        public void PushPost()
+        {
+            _tcpServer.Push();
         }
     }
 }
