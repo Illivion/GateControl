@@ -30,9 +30,21 @@ namespace GateControl.Web.Controllers
 
         [HttpPost]
         [Route("gate/push")]
-        public void PushPost()
+        public IActionResult PushPost([FromQuery]String key)
         {
+            if (String.IsNullOrEmpty(key))
+            {
+                return StatusCode(401);
+            }
+
+            if (key != "fg849cp1")
+            {
+                return Forbid();
+            }
+
             _tcpServer.Push();
+
+            return Ok();
         }
     }
 }
