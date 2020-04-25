@@ -31,7 +31,7 @@ namespace GateControl.Web.Controllers
 
             LastAccess = dt;
 
-            return Ok($"Accepted on {dt:dd.MM.yy HH:mm:ss}. Sent: {sentToDevice}. Previous: {lastAccessString}");
+            return Ok($"<h1>Accepted on {dt:dd.MM.yy HH:mm:ss}. Sent: {sentToDevice}. Previous: {lastAccessString}</h1>");
         }
 
         [HttpPost]
