@@ -11,6 +11,8 @@ namespace GateControl.Web.Controllers
         private readonly ILogger<GateButtonController> _logger;
         private readonly TcpServerService _tcpServer;
 
+        private static DateTime? LastAccess = null;
+
         public GateButtonController(ILogger<GateButtonController> logger, TcpServerService tcpServer)
         {
             _logger = logger;
@@ -25,7 +27,11 @@ namespace GateControl.Web.Controllers
 
             var dt = DateTime.Now;
 
-            return Ok($"Accepted on {dt:dd.MM.yy HH:mm:ss}. Sent: {sentToDevice}");
+            var lastAccessString = LastAccess == null ? "Never" : LastAccess.Value.ToString("dd.MM.yy HH:mm:ss");
+
+            LastAccess = dt;
+
+            return Ok($"Accepted on {dt:dd.MM.yy HH:mm:ss}. Sent: {sentToDevice}. Previous: {lastAccessString}");
         }
 
         [HttpPost]
@@ -39,8 +45,10 @@ namespace GateControl.Web.Controllers
 
             if (key != "fg849cp1")
             {
-                return Forbid();
+                return StatusCode(403);
             }
+
+            LastAccess = DateTime.Now;
 
             _tcpServer.Push();
 
