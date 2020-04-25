@@ -10,7 +10,7 @@ namespace GateControl.Web.Services
     {
         private readonly string _ip;
         private readonly int _port;
-        private Socket _acceptingSocket;
+        private readonly Socket _acceptingSocket;
 
         private Socket _currentClient = null;
 
