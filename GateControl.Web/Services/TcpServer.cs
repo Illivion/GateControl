@@ -80,5 +80,10 @@ namespace GateControl.Web.Services
             }
             catch { }
         }
+
+        public Boolean IsDeviceConnected()
+        {
+            return _currentClient != null;
+        }
     }
 }

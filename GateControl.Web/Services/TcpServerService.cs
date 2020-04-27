@@ -30,5 +30,10 @@ namespace GateControl.Web.Services
         {
             return _server.SendPushCommand();
         }
+
+        public Boolean IsDeviceConnected()
+        {
+            return _server.IsDeviceConnected();
+        }
     }
 }

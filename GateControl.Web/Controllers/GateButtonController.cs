@@ -20,8 +20,18 @@ namespace GateControl.Web.Controllers
         }
 
         [HttpGet]
+        [Route("status")]
+        public StatusResult Status()
+        {
+            return new StatusResult()
+            {
+                IsDeviceConnected = _tcpServer.IsDeviceConnected()
+            };
+        }
+
+        [HttpGet]
         [Route("gate/push")]
-        public IActionResult Push()
+        public ContentResult Push()
         {
             var sentToDevice = _tcpServer.Push();
 
@@ -31,7 +41,7 @@ namespace GateControl.Web.Controllers
 
             _lastAccess = dt;
 
-            return Ok($"<h1>Accepted on {dt:dd.MM.yy HH:mm:ss}. Sent: {sentToDevice}. Previous: {lastAccessString}</h1>");
+            return base.Content($"<h1>Accepted on {dt:dd.MM.yy HH:mm:ss}. Sent: {sentToDevice}. Previous: {lastAccessString}</h1>");
         }
 
         [HttpPost]
