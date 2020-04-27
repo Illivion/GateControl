@@ -13,6 +13,8 @@ namespace GateControl.Web.Controllers
 
         private static DateTime? _lastAccess;
 
+        private static Boolean _suspended = false;
+
         public GateButtonController(ILogger<GateButtonController> logger, TcpServerService tcpServer)
         {
             _logger = logger;
@@ -29,10 +31,33 @@ namespace GateControl.Web.Controllers
             };
         }
 
+        [HttpPost]
+        [Route("gate/suspend")]
+        public IActionResult SuspendControl()
+        {
+            _suspended = true;
+
+            return Ok("acknowledged");
+        }
+
+        [HttpPost]
+        [Route("gate/resume")]
+        public IActionResult ResumeControl()
+        {
+            _suspended = false;
+
+            return Ok("acknowledged");
+        }
+
         [HttpGet]
         [Route("gate/push")]
         public ContentResult Push()
         {
+            if (_suspended)
+            {
+                Forbid();
+            }
+
             var sentToDevice = _tcpServer.Push();
 
             var dt = DateTime.Now;
@@ -48,12 +73,22 @@ namespace GateControl.Web.Controllers
         [Route("gate/push")]
         public IActionResult PushPost([FromQuery]String key)
         {
+            if (_suspended)
+            {
+                Forbid();
+            }
+
             if (String.IsNullOrEmpty(key))
             {
                 return StatusCode(401);
             }
 
-            if (key != "fg849cp1")
+            if (key == "fg849cp1")
+            {
+                return Ok();
+            }
+
+            if (key != "sp3219px")
             {
                 return StatusCode(403);
             }
@@ -62,7 +97,7 @@ namespace GateControl.Web.Controllers
 
             _tcpServer.Push();
 
-            return Ok("ok");
+            return Ok();
         }
     }
 }
