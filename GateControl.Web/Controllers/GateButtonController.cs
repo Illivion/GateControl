@@ -51,11 +51,11 @@ namespace GateControl.Web.Controllers
 
         [HttpGet]
         [Route("gate/push")]
-        public ContentResult Push()
+        public IActionResult Push()
         {
             if (_suspended)
             {
-                Forbid();
+                return Forbid();
             }
 
             var sentToDevice = _tcpServer.Push();
@@ -75,7 +75,7 @@ namespace GateControl.Web.Controllers
         {
             if (_suspended)
             {
-                Forbid();
+                return Forbid();
             }
 
             if (String.IsNullOrEmpty(key))
