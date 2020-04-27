@@ -62,7 +62,7 @@ namespace GateControl.Web.Controllers
 
             _tcpServer.Push();
 
-            return Ok();
+            return Ok("ok");
         }
     }
 }
