@@ -13,11 +13,7 @@ namespace GateControl.Web.Services
         private readonly Socket _acceptingSocket;
 
         private Socket _currentClient = null;
-
-        private Timer _pingTimer;
-
-        private Object _sync = new Object();
-
+        
         private Task _acceptingTask;
 
         public TcpServer(String ip, Int32 port)
@@ -25,14 +21,8 @@ namespace GateControl.Web.Services
             _ip = ip;
             _port = port;
             _acceptingSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-            _pingTimer = new Timer(DoPing);
         }
-
-        private void DoPing(object? state)
-        {
-            _currentClient?.SendString("ping");
-        }
-
+        
         public Boolean SendPushCommand()
         {
             var client = _currentClient;

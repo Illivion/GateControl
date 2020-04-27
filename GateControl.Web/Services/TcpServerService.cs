@@ -16,14 +16,18 @@ namespace GateControl.Web.Services
             _server = new TcpServer(Settings.IP, Settings.TcpPort);
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public  Task StartAsync(CancellationToken cancellationToken)
         {
             _server.Start();
+
+            return Task.CompletedTask;
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken)
+        public Task StopAsync(CancellationToken cancellationToken)
         {
             _server.Stop();
+
+            return Task.CompletedTask;
         }
 
         public Boolean Push()
