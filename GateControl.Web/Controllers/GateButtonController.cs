@@ -55,7 +55,7 @@ namespace GateControl.Web.Controllers
         {
             if (_suspended)
             {
-                return Forbid();
+                return StatusCode(400, "suspended");
             }
 
             var sentToDevice = _tcpServer.Push();
@@ -75,7 +75,7 @@ namespace GateControl.Web.Controllers
         {
             if (_suspended)
             {
-                return Forbid();
+                return StatusCode(400, "suspended");
             }
 
             if (String.IsNullOrEmpty(key))
