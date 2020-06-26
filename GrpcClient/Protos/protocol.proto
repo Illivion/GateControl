@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option csharp_namespace = "GateControl.Web.GRPC";
+
+service GateMessages {
+	
+	rpc OpenCloseCommandStream(OpenCloseCommandStreamRequest) returns (stream OpenCloseCommand){};
+}
+
+message OpenCloseCommand {
+
+}
+
+message OpenCloseCommandStreamRequest {
+
+}

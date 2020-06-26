@@ -6,9 +6,13 @@ namespace GateControl.Web.Services
 {
     public static class SocketExtensions
     {
-        public static void SendString(this Socket socket, String value)
+        public static Int32 SendString(this Socket socket, String value)
         {
-            socket.Send(Encoding.ASCII.GetBytes(value + "\n"));
+            var cmd = Encoding.ASCII.GetBytes(value + "\n");
+
+            socket.Send(cmd);
+
+            return cmd.Length;
         }
     }
 }

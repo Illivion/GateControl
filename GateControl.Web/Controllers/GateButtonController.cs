@@ -1,4 +1,5 @@
 ﻿using System;
+using GateControl.Web.GRPC;
 using GateControl.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,15 +11,17 @@ namespace GateControl.Web.Controllers
     {
         private readonly ILogger<GateButtonController> _logger;
         private readonly TcpServerService _tcpServer;
+        private readonly OpenCloseCommandService _openCloseCommandService;
 
         private static DateTime? _lastAccess;
 
         private static Boolean _suspended = false;
 
-        public GateButtonController(ILogger<GateButtonController> logger, TcpServerService tcpServer)
+        public GateButtonController(ILogger<GateButtonController> logger, TcpServerService tcpServer, OpenCloseCommandService openCloseCommandService)
         {
             _logger = logger;
             _tcpServer = tcpServer;
+            _openCloseCommandService = openCloseCommandService;
         }
 
         [HttpGet]
@@ -50,6 +53,7 @@ namespace GateControl.Web.Controllers
         }
 
         [HttpGet]
+        [Route("push")]
         [Route("gate/push")]
         public IActionResult Push()
         {
@@ -57,6 +61,8 @@ namespace GateControl.Web.Controllers
             {
                 return StatusCode(400, "suspended");
             }
+
+            _openCloseCommandService.SendCommand();
 
             var sentToDevice = _tcpServer.Push();
 

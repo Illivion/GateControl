@@ -1,3 +1,4 @@
+using GateControl.Web.GRPC;
 using GateControl.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,9 +20,12 @@ namespace GateControl.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddGrpc();
             services.AddControllers();
 
             services.AddSingleton<TcpServerService>();
+            services.AddSingleton<OpenCloseCommandService>();
+
             services.AddHostedService<TcpServerService>(provider => provider.GetService<TcpServerService>());
         }
 
@@ -37,9 +41,10 @@ namespace GateControl.Web
 
             //app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            app.UseEndpoints(ep =>
             {
-                endpoints.MapControllers();
+                ep.MapGrpcService<GateControlGrpc>();
+                ep.MapControllers();
             });
         }
     }

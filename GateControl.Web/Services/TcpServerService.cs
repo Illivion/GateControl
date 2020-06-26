@@ -32,6 +32,7 @@ namespace GateControl.Web.Services
 
         public Boolean Push()
         {
+
             return _server.SendPushCommand();
         }
 

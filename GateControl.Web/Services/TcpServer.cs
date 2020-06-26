@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -16,27 +17,103 @@ namespace GateControl.Web.Services
         
         private Task _acceptingTask;
 
+        private Object _obj = new Object();
+        
         public TcpServer(String ip, Int32 port)
         {
             _ip = ip;
             _port = port;
             _acceptingSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
         }
+
+        private static Int32 _commandSequence = 1;
         
         public Boolean SendPushCommand()
         {
-            var client = _currentClient;
+            var sw = Stopwatch.StartNew();
 
+            lock (_obj)
+            {
+                var client = _currentClient;
+
+                if (client == null)
+                {
+                    sw.Stop();
+
+                    Debug.WriteLine(sw.ElapsedMilliseconds);
+
+                    return false;
+                }
+
+                var cmdID = Interlocked.Increment(ref _commandSequence).ToString();
+
+                try
+                {
+                    var command = $"push-{cmdID}";
+
+                    var cmdSize = client.SendString(command);
+
+                    var receiveBuffer = new Byte[cmdSize];
+
+                    var received = 0;
+
+                    var task = Task.Run(() =>
+                    {
+                        while (true)
+                        {
+                            try
+                            {
+                                var receivedBytes =
+                                    client.Receive(receiveBuffer, received, 1, SocketFlags.None);
+
+                                received += receivedBytes;
+
+                                if (received == cmdSize-1)
+                                {
+                                    Debug.WriteLine($"{DateTime.Now}: ACK");
+                                    break;
+                                }
+                            }
+                            catch
+                            {
+                                break;
+                            }
+                        }
+                    });
+                    
+                    var ack = task.Wait(TimeSpan.FromSeconds(3));
+
+                    sw.Stop();
+
+                    Debug.WriteLine(sw.ElapsedMilliseconds);
+
+                    return ack;
+                }
+                catch
+                {
+                    Close();
+
+                    sw.Stop();
+
+                    Debug.WriteLine(sw.ElapsedMilliseconds);
+
+                    return true;
+                }
+            }
+        }
+
+        private void Close()
+        {
             try
             {
-                client?.SendString("push");
+                _currentClient?.Close(10);
+                _currentClient?.Dispose();
             }
-            catch
+            catch { }
+            finally
             {
-                client?.Close();
+                _currentClient = null;
             }
-
-            return client != null;
         }
 
         public void Start()
@@ -51,7 +128,7 @@ namespace GateControl.Web.Services
                 {
                     var clientSocket = await _acceptingSocket.AcceptAsync();
 
-                    _currentClient?.Close(1);
+                    Close();
 
                     _currentClient = clientSocket;
                 }
@@ -65,8 +142,7 @@ namespace GateControl.Web.Services
                 _acceptingSocket.Close();
                 _acceptingSocket.Dispose();
 
-                _currentClient?.Close();
-                _currentClient?.Dispose();
+                Close();
             }
             catch { }
         }
