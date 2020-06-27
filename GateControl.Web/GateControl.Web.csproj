@@ -22,6 +22,9 @@
     <None Update="cert.crt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="server.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <DockerfileRunArguments>-p 20080:20080 -p 20000:20000</DockerfileRunArguments>
