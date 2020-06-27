@@ -28,6 +28,7 @@ namespace GateControl.Web
                                         lo.UseHttps("server.pfx", "illivion", o =>
                                         {
                                             o.AllowAnyClientCertificate();
+                                            
                                         });
                                     });
 
