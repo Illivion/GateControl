@@ -21,11 +21,18 @@ namespace GateControl.Web.GRPC
             IServerStreamWriter<OpenCloseCommand> responseStream,
             ServerCallContext context)
         {
-            while (!context.CancellationToken.IsCancellationRequested )
+            try
             {
-                await _openCloseCommandService.Wait();
+                while (!context.CancellationToken.IsCancellationRequested)
+                {
+                    await _openCloseCommandService.Wait(context.CancellationToken);
 
-                await responseStream.WriteAsync(new OpenCloseCommand());
+                    await responseStream.WriteAsync(new OpenCloseCommand());
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERR] {ex.Message}");
             }
         }
     }

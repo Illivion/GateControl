@@ -17,9 +17,9 @@ namespace GateControl.Web.GRPC
             _sync.Release();
         }
 
-        public async Task Wait()
+        public async Task Wait(CancellationToken cancellationToken)
         {
-            await _sync.WaitAsync();
+            await _sync.WaitAsync(cancellationToken);
         }
     }
 }

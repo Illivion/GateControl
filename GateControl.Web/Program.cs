@@ -31,8 +31,7 @@ namespace GateControl.Web
                                             
                                         });
                                     });
-
-                                o.Listen(IPAddress.Any, 80);
+                                o.Listen(IPAddress.Any, 20090);
                             });
                         webBuilder.UseStartup<Startup>();
                     }
