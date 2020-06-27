@@ -24,7 +24,7 @@ namespace GateControl.Web
                                     lo =>
                                     {
                                         lo.Protocols = HttpProtocols.Http2;
-                                        lo.UseHttps("cert.crt");
+                                        lo.UseHttps("server.pfx", "illivion");
                                         
                                     });
 
