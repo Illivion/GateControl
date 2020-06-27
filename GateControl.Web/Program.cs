@@ -25,7 +25,10 @@ namespace GateControl.Web
                                     lo =>
                                     {
                                         lo.Protocols = HttpProtocols.Http2;
-                                        lo.UseHttps("server.pfx", "illivion", o => o.SslProtocols = SslProtocols.Tls12);
+                                        lo.UseHttps("server.pfx", "illivion", o =>
+                                        {
+                                            o.AllowAnyClientCertificate();
+                                        });
                                     });
 
                                 o.Listen(IPAddress.Any, 80);
