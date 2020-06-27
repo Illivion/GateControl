@@ -1,4 +1,5 @@
 using System.Net;
+using System.Security.Authentication;
 using GateControl.Web.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -24,11 +25,10 @@ namespace GateControl.Web
                                     lo =>
                                     {
                                         lo.Protocols = HttpProtocols.Http2;
-                                        lo.UseHttps("server.pfx", "illivion");
-                                        
+                                        lo.UseHttps("server.pfx", "illivion", o => o.SslProtocols = SslProtocols.Tls12);
                                     });
 
-
+                                o.Listen(IPAddress.Any, 80);
                             });
                         webBuilder.UseStartup<Startup>();
                     }
