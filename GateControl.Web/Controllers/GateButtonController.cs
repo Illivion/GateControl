@@ -101,7 +101,7 @@ namespace GateControl.Web.Controllers
 
             _lastAccess = DateTime.Now;
 
-            _tcpServer.Push();
+            _openCloseCommandService.SendCommand();
 
             return Ok();
         }
