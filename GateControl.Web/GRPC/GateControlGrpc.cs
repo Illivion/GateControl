@@ -27,7 +27,14 @@ namespace GateControl.Web.GRPC
                 {
                     await _openCloseCommandService.Wait(context.CancellationToken);
 
-                    await responseStream.WriteAsync(new OpenCloseCommand());
+                    try
+                    {
+                        await responseStream.WriteAsync(new OpenCloseCommand());
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[ERR WRITE] {ex.Message}");
+                    }
                 }
             }
             catch (Exception ex)
